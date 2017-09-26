@@ -3,7 +3,8 @@
 
 var player = new PlayerEngine();
 
-var songText;
+var songCollection = [];
+var songIndex;
 
 //asteroid clone (core mechanics only) // REF: http://p5play.molleindustria.org/ - By Paolo Pedercini
 //arrow keys to move + x to shoot
@@ -15,8 +16,19 @@ var shipImage, bulletImage, particleImage;
 var MARGIN = 40;
 
 function preload(){
-    songTest = loadSound('data/Squarepusher-Dark.mp3');
-    
+    //todo: make an automated searh of mp3 files in the folder "data" and push them
+  
+    songCollection.push('data/MA-Atta_Boy.mp3');
+    songCollection.push('data/MA-Collar_Stays_On.mp3');
+    songCollection.push('data/MA-Confused_Images.mp3');
+    songCollection.push('data/MA-One_Thought_At_A_Time.mp3');
+    songCollection.push('data/MA-Opening_Title.mp3');
+    songCollection.push('data/MA-P_Is_For_Piano.mp3');
+    songCollection.push('data/MA-Polaroid_Girl.mp3');
+    songCollection.push('data/MA-Red_Light_Means Go.mp3');
+    songCollection.push('data/MA-Sam.mp3');
+    songCollection.push('data/MA-Simple_Rules.mp3');
+    songCollection.push('data/Squarepusher-Dark.mp3');
 }
 
 function setup() {
@@ -29,7 +41,7 @@ function setup() {
   ship = createSprite(width/2, height/2);
   ship.setSpeed(0.2, 0);
   ship.maxSpeed = 17;
-  ship.friction = 0.1;
+  ship.friction = 0.09;
   ship.setCollider('circle', 0, 0, 20);
 
   ship.addImage('normal', shipImage);
@@ -38,14 +50,7 @@ function setup() {
   asteroids = new Group();
   bullets = new Group();
 
-  for (var i = 0; i<3; i++) {
-    var ang = random(360);
-    var px = width/2 + 1000 * cos(radians(ang));
-    var py = height/2+ 1000 * sin(radians(ang));
-    
-    //*****************************************
-    createAsteroid(3, px, py, 'data/Squarepusher-Dark.mp3');
-  }
+  generateAsteroids();
 }
 
 function draw() {
@@ -65,7 +70,7 @@ function draw() {
   
   for(i = 0; i < asteroids.length; i++){
     
-  var volume = 0.7 - sqrt(pow((asteroids[i].position.x - ship.position.x)/width, 2) + pow((asteroids[i].position.y - ship.position.y)/height, 2));
+  var volume = 0.5 - sqrt(pow((asteroids[i].position.x - ship.position.x)/width, 2) + pow((asteroids[i].position.y - ship.position.y)/height, 2));
   
   if(asteroids[i].song.isLoaded())
     if(!asteroids[i].song.isPlaying())
@@ -89,10 +94,10 @@ function draw() {
   for (var i=0; i<allSprites.length; i++) {
     var s = allSprites[i];
 
-    if (s.position.x<-MARGIN) s.position.x = width+MARGIN;
-    if (s.position.x>width+MARGIN) s.position.x = -MARGIN;
-    if (s.position.y<-MARGIN) s.position.y = height+MARGIN;
-    if (s.position.y>height+MARGIN) s.position.y = -MARGIN;
+    if (s.position.x<-MARGIN/2) s.velocity.x*=-1;
+    if (s.position.x>width+MARGIN/2) s.velocity.x*=-1;
+    if (s.position.y<-MARGIN/2) s.velocity.y*=-1;
+    if (s.position.y>height+MARGIN/2) s.velocity.y*=-1;
   }
 
   asteroids.overlap(bullets, asteroidHit); // check if an asteroid has been hit
@@ -137,7 +142,7 @@ function draw() {
   drawSprites();
 }
 
-function createAsteroid(type, x, y, songPath) {
+function createAsteroid(type, x, y, songRef) {
   
   var a = createSprite(x, y);
   var img = loadImage('assets/asteroid'+floor(random(0, 3))+'.png');
@@ -149,7 +154,7 @@ function createAsteroid(type, x, y, songPath) {
   
   //*******************************
   
-  a.song = loadSound(songPath);
+  a.song = loadSound(songRef);
   
   //*******************************
 
@@ -169,10 +174,17 @@ function createAsteroid(type, x, y, songPath) {
 function asteroidHit(asteroid, bullet) {
   //var newType = asteroid.type-1;
 
+  if(asteroid.song.isLoaded())
+    if(asteroid.song.isPlaying())
+      asteroid.song.stop()
+      
+  /*   
   if (asteroid.type>0) {
-    createAsteroid(asteroid.type, width/2, height/2, 'data/Squarepusher-Dark.mp3');
+    createAsteroid(asteroid.type, width/2, height/2, songCollection[songIndex]);
+    songIndex++;
     //createAsteroid(newType, asteroid.position.x, asteroid.position.y, 'data/Squarepusher-Dark.mp3');
   }
+  */
 
 //***************************************
 
@@ -186,4 +198,20 @@ function asteroidHit(asteroid, bullet) {
 
   bullet.remove();
   asteroid.remove();
+  
+  if(asteroids.length <= 0)
+    generateAsteroids();
+}
+
+function generateAsteroids(){
+    //the below loop  should not be larger than the loaded songs
+  for (songIndex = 0; songIndex<5; songIndex++) {
+    var ang = random(360);
+    var px = width/2;//  * cos(radians(ang));
+    var py = height/2; //* sin(radians(ang));
+    
+    //*****************************************
+    createAsteroid(3, px, py, songCollection[songIndex]);
+  }
+  
 }
