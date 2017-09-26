@@ -1,4 +1,5 @@
-var player = new payerEngine();
+var player = new PlayerEngine();
+var song1 = new Song();
 
 function setup() {
   
