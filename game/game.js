@@ -1,3 +1,5 @@
+var player = new payerEngine();
+
 function setup() {
   
 }
