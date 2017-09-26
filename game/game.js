@@ -18,7 +18,8 @@ function setup() {
   particleImage = loadImage('assets/asteroids_particle.png');
 
   ship = createSprite(width/2, height/2);
-  ship.maxSpeed = 6;
+  ship.setSpeed(0.2, 0);
+  ship.maxSpeed = 8;
   ship.friction = 0.98;
   ship.setCollider('circle', 0, 0, 20);
 
@@ -45,15 +46,16 @@ function draw() {
 
   for(var i=0; i<allSprites.length; i++) {
     var s = allSprites[i];
+    
     if(s.position.x<-MARGIN) s.position.x = width+MARGIN;
     if(s.position.x>width+MARGIN) s.position.x = -MARGIN;
     if(s.position.y<-MARGIN) s.position.y = height+MARGIN;
     if(s.position.y>height+MARGIN) s.position.y = -MARGIN;
   }
 
-  asteroids.overlap(bullets, asteroidHit);
+  asteroids.overlap(bullets, asteroidHit); // check if an asteroid has been hit
 
-  ship.bounce(asteroids);
+  ship.bounce(asteroids); // check if the ship has been hit
 
   if(keyDown(LEFT_ARROW))
     ship.rotation -= 4;
@@ -61,8 +63,9 @@ function draw() {
     ship.rotation += 4;
   if(keyDown(UP_ARROW))
   {
-    ship.addSpeed(0.2, ship.rotation);
+    ship.addSpeed(.2, ship.rotation);
     ship.changeAnimation('thrust');
+    console.log(ship.velocity.x);
   }
   else
     ship.changeAnimation('normal');
