@@ -1,8 +1,6 @@
 var player = new PlayerEngine();
-//var song1 = new Song();
 
 var songText;
-
 
 //asteroid clone (core mechanics only) // REF: http://p5play.molleindustria.org/ - By Paolo Pedercini
 //arrow keys to move + x to shoot
@@ -13,14 +11,17 @@ var ship;
 var shipImage, bulletImage, particleImage;
 var MARGIN = 40;
 
+function preload(){
+    songTest = loadSound('data/Squarepusher-Dark.mp3');
+    
+}
+
 function setup() {
   createCanvas(800, 600);
 
   bulletImage = loadImage('assets/asteroids_bullet.png');
   shipImage = loadImage('assets/asteroids_ship0001.png');
   particleImage = loadImage('assets/asteroids_particle.png');
-  
-  songTest = loadSound('data/Squarepusher-Dark.mp3');
 
   ship = createSprite(width/2, height/2);
   ship.setSpeed(0.2, 0);
@@ -34,15 +35,35 @@ function setup() {
   asteroids = new Group();
   bullets = new Group();
 
-  for (var i = 0; i<8; i++) {
+  for (var i = 0; i<1; i++) {
     var ang = random(360);
     var px = width/2 + 1000 * cos(radians(ang));
     var py = height/2+ 1000 * sin(radians(ang));
-    createAsteroid(3, px, py);
+    
+    //*****************************************
+    createAsteroid(3, px, py, 'data/Squarepusher-Dark.mp3');
   }
 }
 
 function draw() {
+  
+  var volume0 = 1. - sqrt(pow((asteroids[0].position.x - ship.position.x)/width, 2) + pow((asteroids[0].position.y - ship.position.y)/height, 2));
+  
+  if(asteroids[0].song.isLoaded())
+    if(!asteroids[0].song.isPlaying())
+      asteroids[0].song.play();
+      
+  if(asteroids[0].song.isLoaded())
+    if(asteroids[0].song.isPlaying()){
+        asteroids[0].song.setVolume(volume0);
+     }
+  
+  for(i = 0; i < asteroids.length; i++){
+    
+    //asteroids[i].song.play();
+    
+  }
+  
   background(0);
 
   fill(255);
@@ -85,10 +106,6 @@ function draw() {
     ship.addSpeed(.2, ship.rotation);
     ship.changeAnimation('thrust');
     //if statement condition to handle angles bigger than PI
-
-    //***********************************************************
-
-    console.log(ship.velocity.x);
   } else
     ship.changeAnimation('normal');
 
@@ -104,7 +121,8 @@ function draw() {
   drawSprites();
 }
 
-function createAsteroid(type, x, y) {
+function createAsteroid(type, x, y, songPath) {
+  
   var a = createSprite(x, y);
   var img = loadImage('assets/asteroid'+floor(random(0, 3))+'.png');
   a.addImage(img);
@@ -112,6 +130,12 @@ function createAsteroid(type, x, y) {
   a.rotationSpeed = 0.5;
   //a.debug = true;
   a.type = type;
+  
+  //*******************************
+  
+  a.song = loadSound(songPath);
+  
+  //*******************************
 
   if (type == 2)
     a.scale = 0.6;
@@ -124,13 +148,17 @@ function createAsteroid(type, x, y) {
   return a;
 }
 
-function asteroidHit(asteroid, bullet) {
-  var newType = asteroid.type-1;
+//***************************************
 
-  if (newType>0) {
-    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
-    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
+function asteroidHit(asteroid, bullet) {
+  //var newType = asteroid.type-1;
+
+  if (asteroid.type>0) {
+    createAsteroid(asteroid.type, width/2, height/2, 'data/Squarepusher-Dark.mp3');
+    //createAsteroid(newType, asteroid.position.x, asteroid.position.y, 'data/Squarepusher-Dark.mp3');
   }
+
+//***************************************
 
   for (var i=0; i<10; i++) {
     var p = createSprite(bullet.position.x, bullet.position.y);

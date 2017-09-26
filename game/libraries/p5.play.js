@@ -1247,6 +1247,7 @@ function Sprite(pInst, _x, _y, _w, _h) {
     {
       //if there has been a change somewhere after the last update
       //the old position is the last position registered in the update
+
       if(this.newPosition !== this.position)
         this.previousPosition = createVector(this.newPosition.x, this.newPosition.y);
       else
