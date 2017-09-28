@@ -71,7 +71,8 @@ function draw() {
   for(i = 0; i < asteroids.length; i++){
     
   var volume = 0.5 - sqrt(pow((asteroids[i].position.x - ship.position.x)/width, 2) + pow((asteroids[i].position.y - ship.position.y)/height, 2));
-  
+  if(volume<=0) volume = 0;
+
   if(asteroids[i].song.isLoaded())
     if(!asteroids[i].song.isPlaying())
       asteroids[i].song.play();
