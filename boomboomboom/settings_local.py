@@ -35,22 +35,5 @@ DATABASES = {
    'default': {
       'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracl$
       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),    # Or path to database file if using 
-# The following settings are not used with sqlite3:
-#        'USER': 'imc',
-#        'PASSWORD': '',
-#        'HOST': '',                      # Empty for localhost through domain sockets or   '127.0.0.1' $
-#        'PORT': '',                      # Set to empty string for default.
     }
 }
-     
-# SOUTH_DATABASE_ADAPTERS = {
-# 'default': "south.db.mysql"
-# } 
-
-# HAYSTACK_CONNECTIONS = {
-#     'default': {
-#         'ENGINE': 'elasticsearch2_backend.ElasticsearchSearchEngine',
-#         'URL': 'http://127.0.0.1:9200/',
-#         'INDEX_NAME': 'haystack',
-#     },
-# }

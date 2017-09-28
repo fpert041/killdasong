@@ -15,6 +15,12 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_PATH = os.path.join(BASE_DIR, os.pardir)
+PROJECT_PATH = os.path.abspath(PROJECT_PATH)
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+STATIC_PATH = os.path.join(BASE_DIR, 'static')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -55,7 +61,7 @@ ROOT_URLCONF = 'boomboomboom.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_PATH],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,10 +71,12 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
+                # 'django.template.context_processors',
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
-                "boomboomboom.context_processors.baseurl",
-                "boomboomboom.context_processors.default",
+                # "django.template.context_processors.request",
+                # "boomboomboom.context_processors.baseurl",
+                # "boomboomboom.context_processors.default",
+                
             ],
         },
     },
@@ -125,5 +133,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+# GAME_URL = '/game/'
 
 from settings_local import *
